@@ -9,10 +9,41 @@ const cityInput = document.getElementById('cityInput');
 const searchBtn = document.getElementById('searchBtn');
 const weatherInfo = document.getElementById('weatherInfo');
 const errorMessage = document.getElementById('errorMessage');
+const loadingSpinner = document.getElementById('loadingSpinner');
 const cityName = document.getElementById('cityName');
 const temperature = document.getElementById('temperature');
 const condition = document.getElementById('condition');
 const humidity = document.getElementById('humidity');
+const feelsLike = document.getElementById('feelsLike');
+const windSpeed = document.getElementById('windSpeed');
+const weatherIcon = document.getElementById('weatherIcon');
+const errorText = document.querySelector('.error-text');
+
+// Weather icon mapping based on OpenWeatherMap condition codes
+function getWeatherIcon(weatherCode, isDay = true) {
+    const icons = {
+        '01d': '☀️', // clear sky day
+        '01n': '🌙', // clear sky night
+        '02d': '⛅', // few clouds day
+        '02n': '☁️', // few clouds night
+        '03d': '☁️', // scattered clouds
+        '03n': '☁️',
+        '04d': '☁️', // broken clouds
+        '04n': '☁️',
+        '09d': '🌧️', // shower rain
+        '09n': '🌧️',
+        '10d': '🌦️', // rain day
+        '10n': '🌧️', // rain night
+        '11d': '⛈️', // thunderstorm
+        '11n': '⛈️',
+        '13d': '❄️', // snow
+        '13n': '❄️',
+        '50d': '🌫️', // mist
+        '50n': '🌫️'
+    };
+    
+    return icons[weatherCode] || '🌤️';
+}
 
 // Function to fetch weather data
 async function fetchWeather(city) {
@@ -20,6 +51,8 @@ async function fetchWeather(city) {
         // Show loading state
         hideError();
         weatherInfo.classList.add('hidden');
+        loadingSpinner.classList.remove('hidden');
+        searchBtn.disabled = true;
 
         // Validate API key
         if (API_KEY === 'YOUR_API_KEY') {
@@ -61,12 +94,19 @@ async function fetchWeather(city) {
         // Parse JSON response
         const data = await response.json();
 
+        // Small delay for better UX
+        await new Promise(resolve => setTimeout(resolve, 500));
+
         // Display weather information
         displayWeather(data);
 
     } catch (error) {
         // Display error message
         showError(error.message);
+    } finally {
+        // Hide loading spinner and re-enable button
+        loadingSpinner.classList.add('hidden');
+        searchBtn.disabled = false;
     }
 }
 
@@ -76,6 +116,12 @@ function displayWeather(data) {
     temperature.textContent = Math.round(data.main.temp);
     condition.textContent = data.weather[0].description;
     humidity.textContent = `${data.main.humidity}%`;
+    feelsLike.textContent = `${Math.round(data.main.feels_like)}°C`;
+    windSpeed.textContent = `${Math.round(data.wind.speed * 3.6)} km/h`;
+    
+    // Set weather icon based on condition
+    const iconCode = data.weather[0].icon;
+    weatherIcon.textContent = getWeatherIcon(iconCode);
 
     // Show weather info and hide error
     weatherInfo.classList.remove('hidden');
@@ -84,7 +130,7 @@ function displayWeather(data) {
 
 // Function to show error message
 function showError(message) {
-    errorMessage.textContent = message;
+    errorText.textContent = message;
     errorMessage.classList.remove('hidden');
     weatherInfo.classList.add('hidden');
 }

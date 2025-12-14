@@ -7,14 +7,38 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="background-animation"></div>
     <div class="container">
-        <h1>Weather App</h1>
-        <div class="search-box">
-            <input type="text" id="cityInput" placeholder="Enter city name..." />
-            <button id="searchBtn">Get Weather</button>
+        <div class="header">
+            <h1>
+                <span class="icon">🌤️</span>
+                Weather App
+            </h1>
+            <p class="subtitle">Real-time weather information</p>
         </div>
+        
+        <div class="search-box">
+            <div class="input-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="cityInput" placeholder="Enter city name..." />
+            </div>
+            <button id="searchBtn">
+                <span class="btn-text">Get Weather</span>
+                <span class="btn-icon">→</span>
+            </button>
+        </div>
+
+        <div id="loadingSpinner" class="loading-spinner hidden">
+            <div class="spinner"></div>
+            <p>Loading weather data...</p>
+        </div>
+
         <div id="weatherInfo" class="weather-info hidden">
-            <h2 id="cityName"></h2>
+            <div class="weather-header">
+                <h2 id="cityName"></h2>
+                <div class="weather-icon" id="weatherIcon">☀️</div>
+            </div>
+            
             <div class="weather-main">
                 <div class="temperature">
                     <span id="temperature"></span>
@@ -22,14 +46,36 @@
                 </div>
                 <div class="condition" id="condition"></div>
             </div>
+
             <div class="details">
-                <div class="detail-item">
-                    <span class="label">Humidity:</span>
-                    <span id="humidity"></span>
+                <div class="detail-card">
+                    <div class="detail-icon">💧</div>
+                    <div class="detail-content">
+                        <span class="label">Humidity</span>
+                        <span class="value" id="humidity"></span>
+                    </div>
+                </div>
+                <div class="detail-card">
+                    <div class="detail-icon">🌡️</div>
+                    <div class="detail-content">
+                        <span class="label">Feels Like</span>
+                        <span class="value" id="feelsLike"></span>
+                    </div>
+                </div>
+                <div class="detail-card">
+                    <div class="detail-icon">💨</div>
+                    <div class="detail-content">
+                        <span class="label">Wind Speed</span>
+                        <span class="value" id="windSpeed"></span>
+                    </div>
                 </div>
             </div>
         </div>
-        <div id="errorMessage" class="error-message hidden"></div>
+
+        <div id="errorMessage" class="error-message hidden">
+            <span class="error-icon">⚠️</span>
+            <span class="error-text"></span>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
